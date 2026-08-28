@@ -5,7 +5,7 @@ window.__ModuleLoader__.load({
 		var exports = module.exports;
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 		let react_jsx_runtime = require("react/jsx-runtime");
-		//#region \0dsh-css:D:\Code\deepseek-harness\packages\client\ui-model-tag\src\client\ModelEffortTagActions.module.css.mjs
+		//#region dsh-css:ModelEffortTagActions.module.css.mjs
 		const css = ".jFEO_q_tag{color:var(--ds-ink-2);white-space:nowrap;opacity:.85;font-size:12px}.jFEO_q_tagStatus{margin-left:8px}";
 		const tagId = "@deepseek-ai/dsh-client-ui-model-tag/ModelEffortTagActions.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
