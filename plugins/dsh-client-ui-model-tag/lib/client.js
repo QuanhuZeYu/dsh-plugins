@@ -5,7 +5,7 @@ window.__ModuleLoader__.load({
 		var exports = module.exports;
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 		let react_jsx_runtime = require("react/jsx-runtime");
-		//#region bundled client css
+		//#region \0dsh-css:D:\Code\deepseek-harness\packages\client\ui-model-tag\src\client\ModelEffortTagActions.module.css.mjs
 		const css = ".jFEO_q_tag{color:var(--ds-ink-2);white-space:nowrap;opacity:.85;font-size:12px}";
 		const tagId = "@deepseek-ai/dsh-client-ui-model-tag/ModelEffortTagActions.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
@@ -17,7 +17,7 @@ window.__ModuleLoader__.load({
 		}
 		var ModelEffortTagActions_module_css_default = { "tag": "jFEO_q_tag" };
 		//#endregion
-		//#region lib/types/client/ModelEffortTagActions.js
+		//#region src/client/ModelEffortTagActions.tsx
 		/**
 		* Resolve the request config of the addressed assistant message, if any.
 		* @param snapshot - conversation snapshot from the standard useSession source.
@@ -38,32 +38,26 @@ window.__ModuleLoader__.load({
 		*/
 		function ModelEffortTagActions({ messageId, useSession, t }) {
 			const config = useSession((snapshot) => requestConfigOf(snapshot, messageId));
-			const width = config?.model;
-			if (width === void 0) return null;
+			const model = config?.model;
+			if (model === void 0) return null;
+			const provider = config?.provider;
 			const effort = config?.reasoningEffort;
-			return (0, react_jsx_runtime.jsxs)("span", {
+			const label = provider !== void 0 ? `${provider}/${model}` : model;
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
 				className: ModelEffortTagActions_module_css_default.tag,
 				title: t("tooltip"),
-				children: [width, effort !== void 0 ? ` · ${effort}` : ""]
+				children: [label, effort !== void 0 ? ` · ${effort}` : ""]
 			});
 		}
 		//#endregion
-		//#region lib/types/client/locales.js
+		//#region src/client/locales.ts
 		/** `modelEffortTag` namespace dictionaries. */
 		/** Simplified Chinese dictionary (the key-set source of truth). */
-		const zh = { tooltip: "生成此消息所用的模型与思考等级" };
+		const zh = { tooltip: "生成此消息所用的提供商/模型与思考等级" };
 		/** English dictionary, checked complete against the zh key set. */
-		const en = { tooltip: "Model and reasoning effort used to generate this message" };
+		const en = { tooltip: "Provider/model and reasoning effort used to generate this message" };
 		//#endregion
-		//#region lib/types/client/index.js
-		/**
-		* Model-effort tag plugin, browser half: a quiet per-message label in the
-		* conversation.chat.assistant-actions strip showing the model and reasoning
-		* effort used to generate that assistant message. Pure render: no store, no
-		* Remote, no per-session state — every message's config is read live from the
-		* conversation snapshot via the standard useSession source.
-		* @module @deepseek-ai/dsh-client-ui-model-tag/client
-		*/
+		//#region src/client/index.ts
 		/** Dictionary namespace owned by this plugin. */
 		const NS = "modelEffortTag";
 		/** Required services: the slot registry and the copy seat. */
