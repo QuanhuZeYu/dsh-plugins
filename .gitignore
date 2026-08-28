@@ -1,0 +1,9 @@
+# 本地产物
+*.zip
+*.tgz
+*.log
+.DS_Store
+Thumbs.db
+
+# 不要提交的本地状态
+*.local.yml

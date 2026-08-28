@@ -1,0 +1,7 @@
+# 分享插件挂载示例（复制到 ~/.dsh/profiles/web/cordis.patch.yml 末尾）
+# 前提：两个包已安装进 dsh 安装树的 node_modules（见 README 方法 B）
+- insert:
+    - id: ui-model-effort-tag
+      name: '@deepseek-ai/dsh-client-ui-model-tag'
+    - id: subagent-effort-in-process
+      name: '@deepseek-ai/dsh-subagent-effort-in-process'
