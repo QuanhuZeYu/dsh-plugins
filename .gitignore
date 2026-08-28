@@ -7,3 +7,6 @@ Thumbs.db
 
 # 不要提交的本地状态
 *.local.yml
+
+# TS 构建缓存
+*.tsbuildinfo
