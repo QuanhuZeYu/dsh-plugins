@@ -24,10 +24,14 @@ function requestConfigOf(snapshot, messageId) {
  */
 export function ModelEffortTagActions({ messageId, useSession, t }) {
     const config = useSession(snapshot => (requestConfigOf(snapshot, messageId)));
-    const width = config?.model;
-    if (width === undefined)
+    const model = config?.model;
+    if (model === undefined)
         return null;
+    const provider = config?.provider;
     const effort = config?.reasoningEffort;
-    return (_jsxs("span", { className: css.tag, title: t('tooltip'), children: [width, effort !== undefined ? ` · ${effort}` : ''] }));
+    // Provider/model · effort — the same provider identity the Trajectory panel
+    // records for the request, folded into the per-message IconActions row.
+    const label = provider !== undefined ? `${provider}/${model}` : model;
+    return (_jsxs("span", { className: css.tag, title: t('tooltip'), children: [label, effort !== undefined ? ` · ${effort}` : ''] }));
 }
 //# sourceMappingURL=ModelEffortTagActions.js.map
