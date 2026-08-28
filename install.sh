@@ -32,7 +32,7 @@ if [ -z "$AI_DIR" ]; then
   echo "例如: DSH_AI_DIR=/path/to/deepseek-harness/apps/cli/node_modules/@deepseek-ai bash install.sh" >&2
   exit 1
 fi
-echo "[1/4] @deepseek-ai 目录: $AI_DIR"
+echo "[1/5] @deepseek-ai 目录: $AI_DIR"
 
 # ── 2. 复制两个插件包 ──
 for p in dsh-client-ui-model-tag dsh-subagent-effort-in-process; do
@@ -40,7 +40,7 @@ for p in dsh-client-ui-model-tag dsh-subagent-effort-in-process; do
   [ -d "$src" ] || { echo "缺少 $src，跳过" >&2; continue; }
   rm -rf "$AI_DIR/$p"
   cp -R "$src" "$AI_DIR/$p"
-  echo "[2/4] 已安装插件包: $p"
+  echo "[2/5] 已安装插件包: $p"
 done
 
 # ── 3. browser 插件: 确保 profiles 树可见 ──
@@ -50,9 +50,9 @@ UI_LINK="$PROFILES_AI/dsh-client-ui-model-tag"
 if [ -d "$UI_TARGET" ] && [ ! -e "$UI_LINK" ]; then
   mkdir -p "$PROFILES_AI"
   ln -s "$UI_TARGET" "$UI_LINK" 2>/dev/null || cp -R "$UI_TARGET" "$UI_LINK"
-  echo "[3/4] 已建立 profiles 树链接: dsh-client-ui-model-tag"
+  echo "[3/5] 已建立 profiles 树链接: dsh-client-ui-model-tag"
 else
-  echo "[3/4] profiles 树已有 dsh-client-ui-model-tag，跳过"
+  echo "[3/5] profiles 树已有 dsh-client-ui-model-tag，跳过"
 fi
 
 # ── 4. 追加 patch（幂等） ──
@@ -66,11 +66,26 @@ BLOCK='
       name: '@deepseek-ai/dsh-subagent-effort-in-process'
 '
 if [ -f "$PATCH_PATH" ] && grep -q 'ui-model-effort-tag' "$PATCH_PATH" && grep -q 'subagent-effort-in-process' "$PATCH_PATH"; then
-  echo "[4/4] patch 已包含两个插件行，跳过"
+  echo "[4/5] patch 已包含两个插件行，跳过"
 else
   mkdir -p "$(dirname "$PATCH_PATH")"
   printf '%s\n' "$BLOCK" >> "$PATCH_PATH"
-  echo "[4/4] 已追加挂载行: $PATCH_PATH"
+  echo "[4/5] 已追加挂载行: $PATCH_PATH"
+fi
+
+# ── 5. ui-conversation 客户端补丁（turn-status 模型标签） ──
+CONV_LIB="$AI_DIR/dsh-client-ui-conversation/lib"
+CONV_PATCH="$SCRIPT_DIR/patches/dsh-client-ui-conversation/lib"
+if [ -d "$CONV_LIB" ]; then
+  for f in client.js client.js.map; do
+    if [ -f "$CONV_LIB/$f" ]; then
+      [ -f "$CONV_LIB/$f.dshbak" ] || cp "$CONV_LIB/$f" "$CONV_LIB/$f.dshbak"
+      cp "$CONV_PATCH/$f" "$CONV_LIB/$f"
+    fi
+  done
+  echo "[5/5] 已应用 dsh-client-ui-conversation 补丁（原文件备份为 .dshbak）"
+else
+  echo "警告: 未找到 dsh-client-ui-conversation，跳过补丁（需 dsh 0.1.1-rc.2+）" >&2
 fi
 
 echo ""

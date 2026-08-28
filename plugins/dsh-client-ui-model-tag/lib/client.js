@@ -6,7 +6,7 @@ window.__ModuleLoader__.load({
 		Object.defineProperty(exports, Symbol.toStringTag, { value: "Module" });
 		let react_jsx_runtime = require("react/jsx-runtime");
 		//#region \0dsh-css:D:\Code\deepseek-harness\packages\client\ui-model-tag\src\client\ModelEffortTagActions.module.css.mjs
-		const css = ".jFEO_q_tag{color:var(--ds-ink-2);white-space:nowrap;opacity:.85;font-size:12px}";
+		const css = ".jFEO_q_tag{color:var(--ds-ink-2);white-space:nowrap;opacity:.85;font-size:12px}.jFEO_q_tagStatus{margin-left:8px}";
 		const tagId = "@deepseek-ai/dsh-client-ui-model-tag/ModelEffortTagActions.module.css";
 		if (typeof document !== "undefined" && document.querySelector("style[data-plugin-css=" + JSON.stringify(tagId) + "]") === null) {
 			const tag = document.createElement("style");
@@ -15,9 +15,25 @@ window.__ModuleLoader__.load({
 			tag.textContent = css;
 			document.head.appendChild(tag);
 		}
-		var ModelEffortTagActions_module_css_default = { "tag": "jFEO_q_tag" };
+		var ModelEffortTagActions_module_css_default = {
+			"tag": "jFEO_q_tag",
+			"tagStatus": "jFEO_q_tagStatus"
+		};
 		//#endregion
 		//#region src/client/ModelEffortTagActions.tsx
+		/** Render one provider/model · effort label from a request config. */
+		function ModelEffortTagLabel({ config, t, className }) {
+			const model = config?.model;
+			if (model === void 0) return null;
+			const provider = config?.provider;
+			const effort = config?.reasoningEffort;
+			const label = provider !== void 0 ? `${provider}/${model}` : model;
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
+				className: className === void 0 ? ModelEffortTagActions_module_css_default.tag : `${ModelEffortTagActions_module_css_default.tag} ${className}`,
+				title: t("tooltip"),
+				children: [label, effort !== void 0 ? ` · ${effort}` : ""]
+			});
+		}
 		/**
 		* Resolve the request config of the addressed assistant message, if any.
 		* @param snapshot - conversation snapshot from the standard useSession source.
@@ -37,16 +53,21 @@ window.__ModuleLoader__.load({
 		* @returns the label, or null when the message has no recorded request config.
 		*/
 		function ModelEffortTagActions({ messageId, useSession, t }) {
-			const config = useSession((snapshot) => requestConfigOf(snapshot, messageId));
-			const model = config?.model;
-			if (model === void 0) return null;
-			const provider = config?.provider;
-			const effort = config?.reasoningEffort;
-			const label = provider !== void 0 ? `${provider}/${model}` : model;
-			return /* @__PURE__ */ (0, react_jsx_runtime.jsxs)("span", {
-				className: ModelEffortTagActions_module_css_default.tag,
-				title: t("tooltip"),
-				children: [label, effort !== void 0 ? ` · ${effort}` : ""]
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(ModelEffortTagLabel, {
+				config: useSession((snapshot) => requestConfigOf(snapshot, messageId)),
+				t
+			});
+		}
+		/**
+		* The running-turn status entry: shows the in-flight request's
+		* provider/model · effort beside the "Deep diving..." strip and its clock.
+		* @param props - the turn status owner share (in-flight request config) and the locale seat.
+		*/
+		function ModelEffortTagTurnStatus({ requestConfig, t }) {
+			return /* @__PURE__ */ (0, react_jsx_runtime.jsx)(ModelEffortTagLabel, {
+				config: requestConfig,
+				t,
+				className: ModelEffortTagActions_module_css_default.tagStatus
 			});
 		}
 		//#endregion
@@ -78,6 +99,15 @@ window.__ModuleLoader__.load({
 					order: 6,
 					locale: NS
 				}, ModelEffortTagActions);
+				return () => {
+					dispose();
+				};
+			});
+			ctx.slots.inject("conversation.chat.turnStatus", () => {
+				const dispose = ctx.slots.register({
+					name: "conversation.chat.turnStatus",
+					locale: NS
+				}, ModelEffortTagTurnStatus);
 				return () => {
 					dispose();
 				};

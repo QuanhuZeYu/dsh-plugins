@@ -6,7 +6,7 @@
  * conversation snapshot via the standard useSession source.
  * @module @deepseek-ai/dsh-client-ui-model-tag/client
  */
-import { ModelEffortTagActions } from "./ModelEffortTagActions.js";
+import { ModelEffortTagActions, ModelEffortTagTurnStatus } from "./ModelEffortTagActions.js";
 import { en, zh } from "./locales.js";
 /** Dictionary namespace owned by this plugin. */
 const NS = 'modelEffortTag';
@@ -25,6 +25,13 @@ export function apply(ctx) {
             order: 6,
             locale: NS,
         }, ModelEffortTagActions);
+        return () => { dispose(); };
+    });
+    ctx.slots.inject('conversation.chat.turnStatus', () => {
+        const dispose = ctx.slots.register({
+            name: 'conversation.chat.turnStatus',
+            locale: NS,
+        }, ModelEffortTagTurnStatus);
         return () => { dispose(); };
     });
 }
